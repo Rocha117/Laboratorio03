@@ -1,5 +1,5 @@
 
-class Cuenta_bancaria():
+class Cuenta_bancaria:
     """
 
     """

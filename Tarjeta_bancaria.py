@@ -1,5 +1,5 @@
 
-class Tarjeta_bancaria():
+class Tarjeta_bancaria:
     """
     """
     def __init__():  # a

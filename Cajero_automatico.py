@@ -2,7 +2,7 @@ import Cuenta_bancaria
 import Persona
 
 
-class Cajero_automatico():
+class Cajero_automatico:
     """
 
     """
