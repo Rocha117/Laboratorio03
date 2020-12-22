@@ -1,13 +1,9 @@
 
-"""
-
-"""
-
 
 class Persona():
     """
 
     """
-    def func():
+    def __init__():  # a
         pass
     pass

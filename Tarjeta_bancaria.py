@@ -1,12 +1,7 @@
 
-"""
-
-"""
-
-
 class Tarjeta_bancaria():
     """
     """
-    def func():
+    def __init__():  # a
         pass
     pass
