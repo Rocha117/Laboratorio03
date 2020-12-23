@@ -49,6 +49,7 @@ class Persona(Tarjeta_bancaria, Cuenta_bancaria):
         return self._edad
 
     @edad.setter
-    def edad(self, n):  # Establece un rango para la edad entre 0 y 100 años
-        assert (n > 0 and n < 100), "La edad de la persona debe ser entre 0 y 100 años"
+    def edad(self, n):  # Establece un rango para la edad entre 18 y 100 años
+        assert (n >= 18 and n <=
+                100), "La edad de la persona debe ser entre 18 y 100 años"
         self._edad = n
