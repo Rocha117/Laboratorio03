@@ -1,7 +1,8 @@
 
-class Tarjeta_bancaria:
+class Tarjeta_bancaria(object):
     """
     """
-    def __init__():  # a
+
+    def __init__(self, num_tarj, estado):  # a
         pass
     pass
