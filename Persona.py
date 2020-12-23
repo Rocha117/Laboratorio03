@@ -1,8 +1,7 @@
 import Cuenta_bancaria
 import Tarjeta_bancaria
 
-
-class Persona(Tarjeta_bancaria.Tarjeta_bancaria, Cuenta_bancaria.Cuenta_bancaria):
+class Persona(Tarjeta_bancaria, Cuenta_bancaria):
     """
     Permite asignarle a las personas una cuenta y una tarjeta bancaria
     """
@@ -14,13 +13,16 @@ class Persona(Tarjeta_bancaria.Tarjeta_bancaria, Cuenta_bancaria.Cuenta_bancaria
         self._nombre = nombre
         self._dni = dni
         self._edad = edad
-        Tarjeta_bancaria.Tarjeta_bancaria.__init__(self, num_tarj, estado)
-        Cuenta_bancaria.Cuenta_bancaria.__init__(self, num_unico, clave)
+        Tarjeta_bancaria.__init__(self, num_tarj, estado)
+        Cuenta_bancaria.__init__(self, num_unico, clave)
         #self.__tarjeta = tarjeta
         #self.__cuenta = cuenta
 
     @property
     def nombre(self):
+        """
+        Permite editar la propiedad de nombre a la persona
+        """
         return self._nombre
 
     @nombre.setter
@@ -30,6 +32,9 @@ class Persona(Tarjeta_bancaria.Tarjeta_bancaria, Cuenta_bancaria.Cuenta_bancaria
 
     @property
     def dni(self):
+        """
+        Permite editar la propiedad de DNI a la persona
+        """
         return self._dni
 
     @dni.setter
@@ -39,25 +44,12 @@ class Persona(Tarjeta_bancaria.Tarjeta_bancaria, Cuenta_bancaria.Cuenta_bancaria
 
     @property
     def edad(self):
+        """
+        Permite editar la propiedad de edad a la persona
+        """
         return self._edad
 
     @edad.setter
     def edad(self, n):
         assert (n > 0 and n < 100), "La edad de la persona debe ser entre 0 y 100 años"
         self._edad = n
-
-    @property
-    def tarjeta(self):
-        return self.__tarjeta
-
-    @tarjeta.setter
-    def tarjeta(self, n):
-        pass
-
-    @property
-    def cuenta(self):
-        return self.__cuenta
-
-    @cuenta.setter
-    def cuenta(self, n):
-        pass
