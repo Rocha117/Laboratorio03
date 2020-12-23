@@ -1,5 +1,5 @@
-import Cuenta_bancaria
 import Tarjeta_bancaria
+import Cuenta_bancaria
 
 
 class Persona(Tarjeta_bancaria, Cuenta_bancaria):
@@ -7,7 +7,7 @@ class Persona(Tarjeta_bancaria, Cuenta_bancaria):
     Permite asignarle a las personas una cuenta y una tarjeta bancaria
     """
 
-    def __init__(self, nombre, dni, edad, num_tarj, estado, num_unico, clave):
+    def __init__(self, nombre, dni, edad,  num_tarj, estado, num_unico, clave):
         """
         Constructor que nos permite inicializar a una persona
         """
