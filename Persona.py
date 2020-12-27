@@ -2,20 +2,22 @@ import Tarjeta_bancaria
 import Cuenta_bancaria
 
 
-class Persona(Tarjeta_bancaria, Cuenta_bancaria):
+class Persona:
     """
     Permite asignarle a las personas una cuenta y una tarjeta bancaria
     """
+    tarjeta = []
+    cuenta = []
 
-    def __init__(self, nombre, dni, edad,  num_tarj, estado, num_unico, clave):
+    def __init__(self, nombre, dni, edad, tarjeta=[], cuenta=[]):
         """
         Constructor que nos permite inicializar a una persona
         """
         self._nombre = nombre
         self._dni = dni
         self._edad = edad
-        Tarjeta_bancaria.__init__(self, num_tarj, estado)
-        Cuenta_bancaria.__init__(self, num_unico, clave)
+        self.tarjeta = tarjeta
+        self.cuenta = cuenta
 
     @property
     def nombre(self):
@@ -53,3 +55,19 @@ class Persona(Tarjeta_bancaria, Cuenta_bancaria):
         assert (n >= 18 and n <=
                 100), "La edad de la persona debe ser entre 18 y 100 años"
         self._edad = n
+
+    @property
+    def tarj(self):
+        return self.tarjeta
+
+    @tarj.setter
+    def tarj(self, p):
+        self.tarjeta.append(p)
+
+    @property
+    def cuent(self):
+        return self.cuenta
+
+    @cuent.setter
+    def cuent(self, p):
+        self.cuenta.append(p)
