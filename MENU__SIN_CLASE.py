@@ -1,14 +1,14 @@
 import datetime
 import time
 import random
-import copy
+
 x = datetime.datetime.now()
 
 
-class Tarjeta_bancaria(object):
+class Tarjeta_bancaria:
 
-    def __init__(self, estado_bloq=0):
-        self.No_tarjeta = [{}, {CCI: }]
+    def __init__(self, No_tarjeta, estado_bloq=0):
+        self.No_tarjeta = No_tarjeta
         self.estado_bloq = estado_bloq
 
     @property
@@ -23,13 +23,15 @@ class Tarjeta_bancaria(object):
 
 class Cuenta_bancaria(object):
 
-    def __init__(self):
+    def __init__(self, num_unic, cci, clave):
         num_cuenta = random.randint(1000000000, 9999999999)
+        self.num_unic = num_unic
         self.num_unic = int(
             "193"+str(num_cuenta))
+        self.cci = cci
         self.cci = int('002'+'193'+'00'+str(num_cuenta) +
-                       random.randint(10, 99))
-
+                       str(random.randint(10, 99)))
+        self.clave = clave
         self.clave = random.randint(1000, 9999)
 
     @property
@@ -51,12 +53,12 @@ class Persona(Tarjeta_bancaria, Cuenta_bancaria):
     Permite asignarle a las personas una cuenta y una tarjeta bancaria
     """
 
-    def __init__(self, nombre, apellido, dni, edad, No_tarjeta=None, estado_bloq=None, num_unic=None, cci=None, clave=None):
+    def __init__(self, nombre, apellido, dni, edad, No_tarjeta=0, estado_bloq=0, num_unic=0, cci=0, clave=0):
         """
         Constructor que nos permite inicializar a una persona
         """
-        Tarjeta_bancaria.__init__(No_tarjeta, estado_bloq)
-        Cuenta_bancaria.__init__(num_unic, cci, clave)
+        Tarjeta_bancaria.__init__(self, No_tarjeta, estado_bloq)
+        Cuenta_bancaria.__init__(self, num_unic, cci, clave)
         self._nombre = nombre
         self._apellido = apellido
         self._dni = dni
@@ -120,26 +122,27 @@ class Banco:
         self.usuarios = usuarios
         self.usuarios_nro_cuenta = usuarios_nro_cuenta
 
-    @property
-    def usuar(self):
-        return self.usuarios
-
-    @usuar.setter
     def agregar_cliente(self, personita):
-        for usuario in self.usuarios:
-            if usuario.has_key(personita._dni):
-                print("Ya existe un usuario con el mismo dni")
 
+        self.usuarios.append({personita._dni: [
+            personita._nombre, personita._edad, personita._dni, personita.num_unic, personita.clave, personita.estado_bloq]})
+        existe = 1
+        for usuario in self.usuarios:
+            if existe == 1:
+                try:
+                    usuario[personita._dni]
+                    existe == 1
+                    print("Ya existe un usuario con el mismo dni")
+                except:
+                    pass
+                    existe = 0
             else:
                 self.usuarios.append({personita._dni: [
-                                     personita._nombre, personita._edad, personita._dni, personita.num_unic, personita.clave, personita.estado_bloq]})
+                    personita._nombre, personita._edad, personita._dni, personita.num_unic, personita.clave, personita.estado_bloq]})
 
-    @property
-    def usuar2(self):
-        return self.usuarios_nro_cuenta
-
-    @usuar2.setter
     def agregar_cliente2(self, personita):
+        self.usuarios_nro_cuenta.append({personita.num_unic: [
+            personita._nombre, personita._edad, personita._dni, personita.num_unic, personita.clave, personita.estado_bloq]})
         for usuario in self.usuarios_nro_cuenta:
             if usuario.has_key(personita._dni):
                 print("Ya existe un usuario con el mismo dni")
@@ -200,8 +203,6 @@ class Cajero_automatico(Banco):
         return self.personas
 
 
-cuentas_ahorro = {11111111111111: 1111}  # 14digitos
-cuentas_bloqueadas = []
 M1 = 50
 M2 = 100
 M3 = 200
@@ -210,7 +211,7 @@ i = 0
 
 
 def main():
-    BancoBCP = Banco({})
+    BancoBCP = Banco()
     while i == 0:
         print("===============================================================================")
         print("                 BIENVENIDO A LA DE RED DE CAJEROS AUTOMATICOS                 \n\n                                   BANCO BCP")
@@ -222,9 +223,9 @@ def main():
             apellido = input("Digite el apellido del usuario: ")
             edad = int(input("Digite la edad del usuario: "))
             DNi = int(input("Digite el DNI del usuario: "))
-            persona1 = Persona(nombre, apellido, DNi, edad)
+            #persona1 = Persona(nombre, apellido, DNi, edad)
 
-            BancoBCP.agregar_cliente(persona1)
+            BancoBCP.agregar_cliente(Persona(nombre, apellido, DNi, edad))
             BancoBCP.agregar_cliente2(persona1)
         elif opcion_0 == 2:
             print("Ingrese su Nº de DNI")
@@ -255,7 +256,7 @@ def main():
 
                         while contador <= 3 and contador > 0:
                             clave_escrita = int(input("Ingrese su clave: "))
-                            if clave_escrita == clave_sistema:
+                            if clave_escrita == usuario[nº_cuenta_ahorro][4]:
                                 print(
                                     "===============================================================================")
                                 print(
@@ -363,7 +364,7 @@ def main():
                                     if menu1 == 1:
                                         nueva_clave = int(
                                             input("Nueva clave: "))
-                                        cuentas_ahorro[nº_cuenta_ahorro] = nueva_clave
+                                        usuario[nº_cuenta_ahorro][4] = nueva_clave
                                         break
                                     else:
                                         print("Opcion invalida")
