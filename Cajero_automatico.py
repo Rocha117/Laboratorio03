@@ -2,14 +2,14 @@ import Cuenta_bancaria
 import Persona
 
 
-class Cajero_automatico(Persona):
+class Cajero_automatico:
     """
     Permite almacenar y autenticar a las personas registradas en el banco
     """
 
-    personas = []  # Esta lista contendrá objetos de la clase Persona
+    personas = {}  # Esta lista contendrá objetos de la clase Persona
 
-    def __init__(self, dinero, personas=[]):
+    def __init__(self, dinero, personas={}):
         """
         Constructor que nos permite inicializar al cajero automático
         """
@@ -42,3 +42,5 @@ class Cajero_automatico(Persona):
     @property
     def cuenta(self):
         return self.personas
+
+
