@@ -190,6 +190,8 @@ class Banco:
                 print(f"NRO TARJETA  :            {usuario[dni][6]}")
                 print(f"CCI:         :            {usuario[dni][7]}")
                 print(f"MONTO:       :            S/. {usuario[dni][9]}")
+                if usuario[dni][5] == 1:
+                    print("\nESTADO:      :            CUENTA BLOQUEADA")
 
                 break
             elif existe == 0:
@@ -273,6 +275,8 @@ def main():
             ex2 = 0
             for usuario in BancoBCP.usuarios_nro_cuenta:
                 operacion = ""
+                NEWCLAVE = 0
+                bloq = 0
                 for key in usuario.keys():
                     if nº_cuenta_ahorro == key:
                         ex = 1
@@ -426,20 +430,22 @@ def main():
                                 else:
                                     print("Opcion invalida")
                                     break
+                                contador = 0
+
                             else:
                                 contador = contador-1
                                 if contador == 2:
-                                    print("Le queda", contador, "intentos")
+                                    print("\nLe queda", contador, "intentos\n")
                                 elif contador == 1:
-                                    print("Le queda", contador, "intento")
-                                    print("Si falla, se bloqueara la cuenta")
+                                    print("\nLe queda", contador, "intento")
+                                    print("Si falla, se bloqueará la cuenta\n")
                                 elif contador == 0:
                                     print(
-                                        "CUENTA BLOQUEADA\nACERQUESE AL BANCO BCP")
-                                    cuentas_bloqueadas.append(nº_cuenta_ahorro)
-                            contador = 0
+                                        "\nCUENTA BLOQUEADA\nACÉRQUESE AL BANCO BCP")
+                                    usuario[nº_cuenta_ahorro][5] = 1
+                                    bloq = 1
                     else:
-                        print("CUENTA BLOQUEADA\nACERQUESE AL BANCO BCP")
+                        print("CUENTA BLOQUEADA\nACÉRQUESE AL BANCO BCP")
                         break
                 elif ex == 0:
                     print("La cuenta no existe\n")
@@ -479,9 +485,19 @@ def main():
                             ex2 = 0
                     if ex2 == 1:
                         usuario[dni3][4] = nueva_clave
+            if bloq == 1:
+                for usuario in BancoBCP.usuarios:
+                    for key in usuario.keys():
+                        if dni3 == key:
+                            ex2 = 1
+                            break
 
+                        else:
+                            ex2 = 0
+                    if ex2 == 1:
+                        usuario[dni3][5] = 1
         else:
-            print("Opcion invalida")
+            print("Opcion inválida")
 
         print("\n\n\n")
         time.sleep(3)
