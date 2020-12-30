@@ -119,7 +119,7 @@ class Persona(Tarjeta_bancaria, Cuenta_bancaria):
         self._edad = n
 
 
-class Banco:
+class Cajero_automatico:
     usuarios = []
     usuarios_nro_cuenta = []
 
@@ -199,21 +199,6 @@ class Banco:
                 print("\nNo existe un cliente con ese dni")
 
 
-class Cajero_automatico(Banco):
-    """
-    Permite almacenar y autenticar a las personas registradas en el banco
-    """
-
-    personas = []  # Esta lista contendrá objetos de la clase Persona
-
-    def __init__(self, dinero, personas=[]):
-        """
-        Constructor que nos permite inicializar al cajero automático
-        """
-        self.personas = personas
-        self.dinero = dinero
-
-
 M1 = 50
 M2 = 100
 M3 = 200
@@ -222,7 +207,7 @@ i = 0
 
 
 def main():
-    BancoBCP = Banco()
+    CajeroBCP = Cajero_automatico()
     while i == 0:
 
         print("===============================================================================")
@@ -242,15 +227,15 @@ def main():
                 input("Digite la edad del usuario:          (En el rango de 18 a 100 años)  :     "))
             persona1.dni = str(int(
                 input("Digite el DNI del usuario:           (8 dígitos)                     :     ")))
-            BancoBCP.agregar_cliente(persona1)
+            CajeroBCP.agregar_cliente(persona1)
             if num_exis == 1:
                 print("\nYa existe un usuario con el mismo dni\n")
             else:
-                BancoBCP.agregar_cliente2(persona1)
+                CajeroBCP.agregar_cliente2(persona1)
         elif opcion_0 == 2:
             print("Ingrese su Nº de DNI")
             dni = str(int(input("DNI: ")))
-            BancoBCP.mostrar_cliente(dni)
+            CajeroBCP.mostrar_cliente(dni)
             print()
             print("1. Cerrar sesion")
             cerrar_sesion = int(input("Opcion: "))
@@ -273,7 +258,7 @@ def main():
 
             ex = 0
             ex2 = 0
-            for usuario in BancoBCP.usuarios_nro_cuenta:
+            for usuario in CajeroBCP.usuarios_nro_cuenta:
                 operacion = ""
                 NEWCLAVE = 0
                 bloq = 0
@@ -419,10 +404,20 @@ def main():
                                     print("1. Cambiar clave")
                                     menu1 = int(input("Opcion: "))
                                     if menu1 == 1:
-                                        nueva_clave = int(
-                                            input("Nueva clave: "))
+                                        while i == 0:
+                                            while True:
+                                                nueva_clave = str(int(
+                                                    input("Nueva clave (4 dígitos): ")))
+                                                try:
+                                                    if len(nueva_clave) == 4:
+                                                        break
+                                                except ValueError:
+                                                    print()
+                                            break
+
                                         usuario[nº_cuenta_ahorro][4] = nueva_clave
                                         NEWCLAVE = 1
+                                        print("\nCLAVE CAMBIADA")
                                         break
                                     else:
                                         print("Opcion invalida")
@@ -452,7 +447,7 @@ def main():
                     print(
                         "-------------------------       SESION FINALIZADA       ------------------------")
             if operacion != "":
-                for usuario in BancoBCP.usuarios:
+                for usuario in CajeroBCP.usuarios:
 
                     for key in usuario.keys():
                         if dni3 == key:
@@ -475,7 +470,7 @@ def main():
                         elif operacion == "R3":
                             usuario[dni3][9] = MONTO-M3
             if NEWCLAVE == 1:
-                for usuario in BancoBCP.usuarios:
+                for usuario in CajeroBCP.usuarios:
                     for key in usuario.keys():
                         if dni3 == key:
                             ex2 = 1
@@ -486,7 +481,7 @@ def main():
                     if ex2 == 1:
                         usuario[dni3][4] = nueva_clave
             if bloq == 1:
-                for usuario in BancoBCP.usuarios:
+                for usuario in CajeroBCP.usuarios:
                     for key in usuario.keys():
                         if dni3 == key:
                             ex2 = 1
