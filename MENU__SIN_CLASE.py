@@ -1,7 +1,6 @@
 import datetime
 import time
 import random
-import copy
 
 x = datetime.datetime.now()
 
@@ -30,15 +29,15 @@ class Tarjeta_bancaria:
 class Cuenta_bancaria(object):
 
     def __init__(self, num_unic, cci, clave):
-        num_cuenta = random.randint(1000000000, 9999999999)
+        num_cuenta = random.randint(10000000000, 99999999999)
         self.num_unic = num_unic
-        self.num_unic = int(
-            "193"+str(num_cuenta))
+        self.num_unic = str(int(
+            "193"+str(num_cuenta)))
         self.cci = cci
-        self.cci = int('002'+'193'+'00'+str(num_cuenta) +
-                       str(random.randint(10, 99)))
+        self.cci = str(int('002'+'193'+'00'+str(num_cuenta) +
+                           str(random.randint(10, 99))))
         self.clave = clave
-        self.clave = random.randint(1000, 9999)
+        self.clave = str(random.randint(1000, 9999))
 
     @property
     def cambiar_clave(self):
@@ -51,7 +50,6 @@ class Cuenta_bancaria(object):
             print(f"Su nueva clave es: {self.clave}")
         else:
             print("Su clave es incorrecta")
-    # print(f"su numero de cuenta es: {self.num_unic}")
 
 
 class Persona(Tarjeta_bancaria, Cuenta_bancaria):
@@ -59,7 +57,7 @@ class Persona(Tarjeta_bancaria, Cuenta_bancaria):
     Permite asignarle a las personas una cuenta y una tarjeta bancaria
     """
 
-    def __init__(self, nombre, apellido, dni, edad, No_tarjeta="", estado_bloq=0, num_unic=0, cci=0, clave=0):
+    def __init__(self, nombre="", apellido="", dni="", edad=0, No_tarjeta="", estado_bloq=0, num_unic="", cci="", clave="", dinero=0):
         """
         Constructor que nos permite inicializar a una persona
         """
@@ -69,6 +67,7 @@ class Persona(Tarjeta_bancaria, Cuenta_bancaria):
         self._apellido = apellido
         self._dni = dni
         self._edad = edad
+        self._dinero = dinero
 
     @property
     def nombre(self):
@@ -148,7 +147,7 @@ class Banco:
             return num_exis
         elif existe == 0:
             self.usuarios.append({personita._dni: [
-                personita._nombre, personita._edad, personita._dni, personita.num_unic, personita.clave, personita.estado_bloq, personita.No_tarjeta, personita.cci, personita._apellido]})
+                personita._nombre, personita._edad, personita._dni, personita.num_unic, personita.clave, personita.estado_bloq, personita.No_tarjeta, personita.cci, personita._apellido, personita._dinero]})
 
     def agregar_cliente2(self, personita):
         existe = 0
@@ -168,7 +167,7 @@ class Banco:
             pass
         elif existe == 0:
             self.usuarios_nro_cuenta.append({personita.num_unic: [
-                personita._nombre, personita._edad, personita._dni, personita.num_unic, personita.clave, personita.estado_bloq, personita.No_tarjeta, personita.cci, personita._apellido]})
+                personita._nombre, personita._edad, personita._dni, personita.num_unic, personita.clave, personita.estado_bloq, personita.No_tarjeta, personita.cci, personita._apellido, personita._dinero]})
 
     def mostrar_cliente(self, dni):
         existe = 0
@@ -190,6 +189,7 @@ class Banco:
                 print(f"CLAVE        :            {usuario[dni][4]}")
                 print(f"NRO TARJETA  :            {usuario[dni][6]}")
                 print(f"CCI:         :            {usuario[dni][7]}")
+                print(f"MONTO:       :            S/. {usuario[dni][9]}")
 
                 break
             elif existe == 0:
@@ -211,33 +211,6 @@ class Cajero_automatico(Banco):
         self.personas = personas
         self.dinero = dinero
 
-    @property
-    def dinero(self):
-        """
-        Permite editar la propiedad de cantidad total de dinero almacenada en la tarjeta bancaria de la persona
-        """
-        return self.dinero
-
-    @dinero.setter
-    # Ejecuta la operacion de depositar (1) o retirar (2) dinero de la tarjeta bancaria de la persona
-    def dinero(self, operacion, n):
-        if operacion == 1:
-            self.dinero = self.dinero+int(n)
-        elif operacion == 2:
-            self.dinero = self.dinero-int(n)
-
-    @property
-    def person(self):
-        return self.personas
-
-    @person.setter
-    def person(self, p):  # p será un objeto Persona
-        self.personas.append(p)
-
-    @property
-    def cuenta(self):
-        return self.personas
-
 
 M1 = 50
 M2 = 100
@@ -258,11 +231,15 @@ def main():
         if opcion_0 == 1:
             global num_exis
             num_exis = 0
-            nombre = input("\nDigite el nombre del usuario: ")
-            apellido = input("Digite el apellido del usuario: ")
-            edad = int(input("Digite la edad del usuario: "))
-            DNi = int(input("Digite el DNI del usuario: "))
-            persona1 = Persona(nombre, apellido, DNi, edad)
+            persona1 = Persona()
+            persona1.nombre = input(
+                "\nDigite el nombre del usuario         (Menor a 12 letras)             :     ")
+            persona1.apellido = input(
+                "Digite el apellido del usuario       (Menor a 12 letras)             :     ")
+            persona1.edad = int(
+                input("Digite la edad del usuario:          (En el rango de 18 a 100 años)  :     "))
+            persona1.dni = str(int(
+                input("Digite el DNI del usuario:           (8 dígitos)                     :     ")))
             BancoBCP.agregar_cliente(persona1)
             if num_exis == 1:
                 print("\nYa existe un usuario con el mismo dni\n")
@@ -270,33 +247,48 @@ def main():
                 BancoBCP.agregar_cliente2(persona1)
         elif opcion_0 == 2:
             print("Ingrese su Nº de DNI")
-            dni = int(input("DNI: "))
+            dni = str(int(input("DNI: ")))
             BancoBCP.mostrar_cliente(dni)
             print()
             print("1. Cerrar sesion")
             cerrar_sesion = int(input("Opcion: "))
             if cerrar_sesion == 1:
-                # break
+
                 print()
             else:
                 print("Opcion invalida")
         elif opcion_0 == 3:
             while i == 0:
                 while True:
-                    nº_cuenta_ahorro = int(input("Ingresa tu Nº de cuenta: "))
+                    nº_cuenta_ahorro = str(
+                        int(input("Ingresa tu Nº de cuenta: ")))
                     try:
-                        if len(str(nº_cuenta_ahorro)) == 14:
+                        if len(nº_cuenta_ahorro) == 14:
                             break
                     except ValueError:
                         print("\nNúmero de cuenta no válida\n")
                 break
+
+            ex = 0
+            ex2 = 0
             for usuario in BancoBCP.usuarios_nro_cuenta:
-                if usuario.has_key(nº_cuenta_ahorro):
+                operacion = ""
+                for key in usuario.keys():
+                    if nº_cuenta_ahorro == key:
+                        ex = 1
+                        break
+
+                    else:
+                        ex = 0
+                if ex == 1:
+                    dni3 = usuario[nº_cuenta_ahorro][2]
                     if usuario[nº_cuenta_ahorro][5] == 0:
+
                         contador = 3
 
                         while contador <= 3 and contador > 0:
-                            clave_escrita = int(input("Ingrese su clave: "))
+                            clave_escrita = str(
+                                int(input("Ingrese su clave: ")))
                             if clave_escrita == usuario[nº_cuenta_ahorro][4]:
                                 print(
                                     "===============================================================================")
@@ -321,16 +313,16 @@ def main():
                                         print("Depositar a:")
                                         while i == 0:
                                             while True:
-                                                depositar_a = int(
-                                                    input("Nº cuenta: "))
+                                                depositar_a = str(int(
+                                                    input("Nº cuenta: ")))
                                                 try:
-                                                    if 12 < len(str(depositar_a)) < 15:
+                                                    if len(depositar_a) == 14:
                                                         break
                                                 except ValueError:
                                                     print()
                                             break
                                         print(
-                                            "Monto: \n1. s/. 50     2. s/. 100     3. s/. 200")
+                                            f"\nMonto: \n1. s/. {M1}     2. s/. {M2}     3. s/. {M3}")
                                         cantidad = int(input("Opcion: "))
                                         print("1. Depositar        2. Cancelar")
                                         opcion1 = int(input("Opcion: "))
@@ -341,13 +333,22 @@ def main():
                                                 "                                     DEPOSITO                                   ")
                                             print(
                                                 "===============================================================================")
-                                            print("Se deposito a: \n",
-                                                  "Nº cuenta: ", depositar_a)
+                                            print(
+                                                "Se deposito a: \nNº cuenta: ", depositar_a)
                                             if cantidad == 1:
+                                                MONTO = usuario[nº_cuenta_ahorro][9]
+                                                usuario[nº_cuenta_ahorro][9] = MONTO+M1
+                                                operacion = "D1"
                                                 print("Monto: s/. ", M1)
                                             elif cantidad == 2:
+                                                MONTO = usuario[nº_cuenta_ahorro][9]
+                                                usuario[nº_cuenta_ahorro][9] = MONTO+M2
+                                                operacion = "D2"
                                                 print("Monto: s/. ", M2)
-                                            elif cantidad == 2:
+                                            elif cantidad == 3:
+                                                MONTO = usuario[nº_cuenta_ahorro][9]
+                                                usuario[nº_cuenta_ahorro][9] = MONTO+M3
+                                                operacion = "D3"
                                                 print("Monto: s/. ", M3)
                                             else:
                                                 print("opcion invalida")
@@ -362,7 +363,7 @@ def main():
                                             break
                                     elif menu1 == 2:
                                         print(
-                                            "Monto: \n1. s/. 50     2. s/. 100     3. s/. 200")
+                                            f"\nMonto: \n1. s/. {M1}     2. s/. {M2}     3. s/. {M3}")
                                         retirar = int(input("Opcion: "))
                                         print("1. Retirar        2. Cancelar")
                                         opcion2 = int(input("Opcion: "))
@@ -376,15 +377,26 @@ def main():
                                             print("Se retiro de: \n",
                                                   "Nº cuenta: ", nº_cuenta_ahorro)
                                             if retirar == 1:
+                                                MONTO = usuario[nº_cuenta_ahorro][9]
+                                                usuario[nº_cuenta_ahorro][9] = MONTO-M1
+                                                operacion = "R1"
                                                 print("Monto: s/. ", M1)
                                             elif retirar == 2:
+                                                MONTO = usuario[nº_cuenta_ahorro][9]
+                                                usuario[nº_cuenta_ahorro][9] = MONTO-M2
+                                                operacion = "R2"
                                                 print("Monto: s/. ", M2)
                                             elif retirar == 3:
+                                                MONTO = usuario[nº_cuenta_ahorro][9]
+                                                usuario[nº_cuenta_ahorro][9] = MONTO-M3
+                                                operacion = "R3"
                                                 print("Monto: s/. ", M3)
                                             else:
                                                 print("opcion invalida")
                                                 break
                                             print("Fecha: ", x)
+                                            print(
+                                                "===============================================================================")
                                         elif opcion2 == 2:
                                             break
                                         else:
@@ -406,6 +418,7 @@ def main():
                                         nueva_clave = int(
                                             input("Nueva clave: "))
                                         usuario[nº_cuenta_ahorro][4] = nueva_clave
+                                        NEWCLAVE = 1
                                         break
                                     else:
                                         print("Opcion invalida")
@@ -424,13 +437,49 @@ def main():
                                     print(
                                         "CUENTA BLOQUEADA\nACERQUESE AL BANCO BCP")
                                     cuentas_bloqueadas.append(nº_cuenta_ahorro)
+                            contador = 0
                     else:
                         print("CUENTA BLOQUEADA\nACERQUESE AL BANCO BCP")
                         break
-                else:
+                elif ex == 0:
                     print("La cuenta no existe\n")
                     print(
                         "-------------------------       SESION FINALIZADA       ------------------------")
+            if operacion != "":
+                for usuario in BancoBCP.usuarios:
+
+                    for key in usuario.keys():
+                        if dni3 == key:
+                            ex2 = 1
+                            break
+
+                        else:
+                            ex2 = 0
+                    if ex2 == 1:
+                        if operacion == "D1":
+                            usuario[dni3][9] = MONTO+M1
+                        elif operacion == "D2":
+                            usuario[dni3][9] = MONTO+M2
+                        elif operacion == "D3":
+                            usuario[dni3][9] = MONTO+M3
+                        elif operacion == "R1":
+                            usuario[dni3][9] = MONTO-M1
+                        elif operacion == "R2":
+                            usuario[dni3][9] = MONTO-M2
+                        elif operacion == "R3":
+                            usuario[dni3][9] = MONTO-M3
+            if NEWCLAVE == 1:
+                for usuario in BancoBCP.usuarios:
+                    for key in usuario.keys():
+                        if dni3 == key:
+                            ex2 = 1
+                            break
+
+                        else:
+                            ex2 = 0
+                    if ex2 == 1:
+                        usuario[dni3][4] = nueva_clave
+
         else:
             print("Opcion invalida")
 
