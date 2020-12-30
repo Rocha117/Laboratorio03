@@ -9,7 +9,12 @@ x = datetime.datetime.now()
 class Tarjeta_bancaria:
 
     def __init__(self, No_tarjeta, estado_bloq=0):
+
+        tarjeta = "4"+str(random.randint(100, 999))+"-" + \
+            str(random.randint(1000, 9999))+"-" + \
+            str(random.randint(1000, 9999))+"-"+str(random.randint(1000, 9999))
         self.No_tarjeta = No_tarjeta
+        self.No_tarjeta = tarjeta
         self.estado_bloq = estado_bloq
 
     @property
@@ -54,7 +59,7 @@ class Persona(Tarjeta_bancaria, Cuenta_bancaria):
     Permite asignarle a las personas una cuenta y una tarjeta bancaria
     """
 
-    def __init__(self, nombre, apellido, dni, edad, No_tarjeta=0, estado_bloq=0, num_unic=0, cci=0, clave=0):
+    def __init__(self, nombre, apellido, dni, edad, No_tarjeta="", estado_bloq=0, num_unic=0, cci=0, clave=0):
         """
         Constructor que nos permite inicializar a una persona
         """
@@ -143,7 +148,7 @@ class Banco:
             return num_exis
         elif existe == 0:
             self.usuarios.append({personita._dni: [
-                personita._nombre, personita._edad, personita._dni, personita.num_unic, personita.clave, personita.estado_bloq]})
+                personita._nombre, personita._edad, personita._dni, personita.num_unic, personita.clave, personita.estado_bloq, personita.No_tarjeta, personita.cci, personita._apellido]})
 
     def agregar_cliente2(self, personita):
         existe = 0
@@ -163,15 +168,32 @@ class Banco:
             pass
         elif existe == 0:
             self.usuarios_nro_cuenta.append({personita.num_unic: [
-                personita._nombre, personita._edad, personita._dni, personita.num_unic, personita.clave, personita.estado_bloq]})
+                personita._nombre, personita._edad, personita._dni, personita.num_unic, personita.clave, personita.estado_bloq, personita.No_tarjeta, personita.cci, personita._apellido]})
 
     def mostrar_cliente(self, dni):
-
+        existe = 0
         for usuario in self.usuarios:
-            if usuario.has_key(dni):
-                print("\n", usuario)
+            for key in usuario.keys():
 
-            else:
+                if dni == key:
+                    existe = 1
+                    break
+
+                else:
+                    existe = 0
+            if existe == 1:
+                print("\nCUENTA BANCARIA:\n")
+                print(f"NOMBRE       :            {usuario[dni][0]}")
+                print(f"APELLIDO     :            {usuario[dni][8]}")
+                print(f"DNI          :            {usuario[dni][2]}")
+                print(f"NRO DE CUENTA:            {usuario[dni][3]}")
+                print(f"CLAVE        :            {usuario[dni][4]}")
+                print(f"NRO TARJETA  :            {usuario[dni][6]}")
+                print(f"CCI:         :            {usuario[dni][7]}")
+
+                break
+            elif existe == 0:
+
                 print("\nNo existe un cliente con ese dni")
 
 
