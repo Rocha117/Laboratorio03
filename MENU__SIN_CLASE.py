@@ -1,6 +1,7 @@
 import datetime
 import time
 import random
+import copy
 
 x = datetime.datetime.now()
 
@@ -123,33 +124,46 @@ class Banco:
         self.usuarios_nro_cuenta = usuarios_nro_cuenta
 
     def agregar_cliente(self, personita):
+        existe = 0
 
-        self.usuarios.append({personita._dni: [
-            personita._nombre, personita._edad, personita._dni, personita.num_unic, personita.clave, personita.estado_bloq]})
-        existe = 1
         for usuario in self.usuarios:
-            if existe == 1:
-                try:
-                    usuario[personita._dni]
-                    existe == 1
-                    print("Ya existe un usuario con el mismo dni")
-                except:
-                    pass
+
+            for key in usuario.keys():
+
+                if personita._dni == key:
+                    existe = 1
+                    break
+
+                else:
                     existe = 0
-            else:
-                self.usuarios.append({personita._dni: [
-                    personita._nombre, personita._edad, personita._dni, personita.num_unic, personita.clave, personita.estado_bloq]})
+
+        if existe == 1:
+            global num_exis
+            num_exis = 1
+            return num_exis
+        elif existe == 0:
+            self.usuarios.append({personita._dni: [
+                personita._nombre, personita._edad, personita._dni, personita.num_unic, personita.clave, personita.estado_bloq]})
 
     def agregar_cliente2(self, personita):
-        self.usuarios_nro_cuenta.append({personita.num_unic: [
-            personita._nombre, personita._edad, personita._dni, personita.num_unic, personita.clave, personita.estado_bloq]})
-        for usuario in self.usuarios_nro_cuenta:
-            if usuario.has_key(personita._dni):
-                print("Ya existe un usuario con el mismo dni")
+        existe = 0
 
-            else:
-                self.usuarios_nro_cuenta.append({personita.num_unic: [
-                    personita._nombre, personita._edad, personita._dni, personita.num_unic, personita.clave, personita.estado_bloq]})
+        for usuario in self.usuarios_nro_cuenta:
+
+            for key in usuario.keys():
+
+                if personita.num_unic == key:
+                    existe = 1
+                    break
+
+                else:
+                    existe = 0
+
+        if existe == 1:
+            pass
+        elif existe == 0:
+            self.usuarios_nro_cuenta.append({personita.num_unic: [
+                personita._nombre, personita._edad, personita._dni, personita.num_unic, personita.clave, personita.estado_bloq]})
 
     def mostrar_cliente(self, dni):
 
@@ -213,20 +227,25 @@ i = 0
 def main():
     BancoBCP = Banco()
     while i == 0:
+
         print("===============================================================================")
         print("                 BIENVENIDO A LA DE RED DE CAJEROS AUTOMATICOS                 \n\n                                   BANCO BCP")
         print("===============================================================================")
         print("1. Registrarse      2. Consultar datos de usuario       3. Ingresar Nº de cuenta")
         opcion_0 = int(input("Opcion: "))
         if opcion_0 == 1:
+            global num_exis
+            num_exis = 0
             nombre = input("\nDigite el nombre del usuario: ")
             apellido = input("Digite el apellido del usuario: ")
             edad = int(input("Digite la edad del usuario: "))
             DNi = int(input("Digite el DNI del usuario: "))
-            #persona1 = Persona(nombre, apellido, DNi, edad)
-
-            BancoBCP.agregar_cliente(Persona(nombre, apellido, DNi, edad))
-            BancoBCP.agregar_cliente2(persona1)
+            persona1 = Persona(nombre, apellido, DNi, edad)
+            BancoBCP.agregar_cliente(persona1)
+            if num_exis == 1:
+                print("\nYa existe un usuario con el mismo dni\n")
+            else:
+                BancoBCP.agregar_cliente2(persona1)
         elif opcion_0 == 2:
             print("Ingrese su Nº de DNI")
             dni = int(input("DNI: "))
